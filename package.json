@@ -1,0 +1,11 @@
+{
+  "name": "sample-excel-on-mongo",
+  "version": "0.0.0",
+  "scripts": {
+    "write": "node app write",
+    "read": "node app read"
+  },
+  "dependencies": {
+    "mongoose": "^5.2.4"
+  }
+}
