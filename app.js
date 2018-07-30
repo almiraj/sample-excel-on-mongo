@@ -5,11 +5,11 @@ mongoose.Promise = Promise;
 mongoose.connect(process.env.MONGODB_URI);
 
 const Schema = mongoose.Schema;
-const ExcelModel = (function() {
+const TemplateModel = (function() {
   const Schema = mongoose.Schema;
-  return mongoose.model('Excel', new Schema({
+  return mongoose.model('Template', new Schema({
     name: { type: String },
-    data: { type: Buffer }
+    template: { type: Buffer }
   }, {
     usePushEach: true
   }));
@@ -17,7 +17,7 @@ const ExcelModel = (function() {
 
 if (process.argv[2] == 'write') {
   fs.readFile('src.xlsx', (e, content) => {
-    ExcelModel.update({ name: 'src.xlsx' }, { name: 'src.xlsx', data: content }, { upsert: true })
+    TemplateModel.update({ name: 'src.xlsx' }, { name: 'src.xlsx', template: content }, { upsert: true })
       .then(result => {
         console.log(result);
         mongoose.disconnect();
@@ -28,13 +28,13 @@ if (process.argv[2] == 'write') {
       });
   });
 } else if (process.argv[2] == 'read') {
-  ExcelModel.findOne({ name: 'src.xlsx'})
+  TemplateModel.findOne({ name: 'src.xlsx'})
     .then(result => {
       if (!result) {
         return Promise.reject('Not Found');
       }
       console.log(result);
-      fs.writeFile('dest.xlsx', result.data, e => {
+      fs.writeFile('dest.xlsx', result.template, e => {
         console.log(e);
         mongoose.disconnect();
       })
